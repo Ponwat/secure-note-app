@@ -1,6 +1,10 @@
 const notesContainer = document.getElementById("notes-container");
 
-const createNoteCard = (noteTitle = "New Note", noteContent = "New Note Content") => {
+/**
+ * @param {String} noteTitle 
+ * @param {String} noteContent 
+ */
+const createNoteCard = (noteTitle, noteContent) => {
   const noteCard = document.createElement("div");
   noteCard.classList.add("note-card");
 
@@ -37,7 +41,7 @@ const createNoteCard = (noteTitle = "New Note", noteContent = "New Note Content"
 
 const createNote = () => {
   console.log("Create Note button clicked");
-  createNoteCard();
+  createNoteCard("New Note", "This is the content of the new note.");
 }
 
 const addNoteButton = document.getElementById("add-note-button");

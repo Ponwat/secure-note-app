@@ -19,6 +19,7 @@
   --text-color: #333333;
 
   --card-min-width: 200px;
+  --card-max-width: 400px;
   --border-radius: 8px;
 
   --font-bold: 700;
@@ -90,6 +91,7 @@ body {
 
 #notes-container {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 0.75rem;
   width: 100%;
@@ -107,6 +109,7 @@ body {
   border: var(--border-brand) 1px solid;
   border-radius: var(--border-radius);
   min-width: var(--card-min-width);
+  max-width: var(--card-max-width);
 }
 
 .note-card-title {
@@ -131,6 +134,7 @@ body {
   cursor: pointer;
 
   color: var(--icon-danger-default);
+  background-color: transparent;
   fill: var(--icon-danger-default);
 }
 

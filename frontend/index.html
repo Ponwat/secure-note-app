@@ -6,6 +6,105 @@
     <title>Secure Note</title>
     <link rel="stylesheet" href="style.css" />
     <script src="app.js" defer></script>
+
+    <style>
+      :root {
+        --background-default: #ffffff;
+        --background-brand: #2c2c2c;
+        --background-brand-hover: #1e1e1e;
+
+        --border-natural-default: #303030;
+        --border-brand: #2c2c2c;
+        --border-secondary: #757575;
+
+        --text-natural-default: #303030;
+        --text-natural-secondary: #5a5a5a;
+        --text-brand: #f5f5f5;
+
+        --icon-danger-default: #900b09;
+
+        --primary-color: #4a90e2;
+        --secondary-color: #f5f5f5;
+        --text-color: #333333;
+
+        --card-min-width: 200px;
+        --card-max-width: 400px;
+        --border-radius: 8px;
+
+        --font-bold: 700;
+      }
+
+      #add-new-note-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+
+        position: fixed;
+
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        background-color: var(--background-default);
+
+        padding: 1.5rem;
+
+        border: var(--border-natural-default) 1px solid;
+        border-radius: var(--border-radius);
+        z-index: 1000;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      #add-new-note-form-element {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        min-width: 600px;
+      }
+
+      .input-group label {
+        width: 80px;
+      }
+
+      .input-group input {
+        padding: 1rem 0.75rem;
+        border: var(--border-secondary) 1px solid;
+        border-radius: var(--border-radius);
+        width: 100%;
+        height: 40px;
+
+        color: var(--text-natural-default);
+      }
+
+      #add-note-submit-button {
+        padding: 0.75rem 1.5rem;
+        border: var(--border-brand) 1px solid;
+        border-radius: var(--border-radius);
+        background-color: var(--background-brand);
+        color: var(--text-brand);
+        cursor: pointer;
+        width: fit-content;
+      }
+
+      #add-note-submit-button:hover {
+        background-color: var(--background-brand-hover);
+      }
+
+    </style>
   </head>
 
   <body>
@@ -17,5 +116,34 @@
       <h2 id="body-header-title">Notes</h2>
       <div id="notes-container"></div>
     </section>
+
+    <div id="add-new-note-form" class="hidden">
+      <h2 id="add-new-note-title">Add New Note</h2>
+      <form id="add-new-note-form-element">
+        <div class="input-group">
+          <label for="note-title-input">Title</label>
+          <input type="text" id="note-title-input" name="note-title" required />
+        </div>
+        <div class="input-group">
+          <label for="note-content-input">Content</label>
+          <input
+            type="text"
+            id="note-content-input"
+            name="note-content"
+            required
+          />
+        </div>
+        <div class="input-group">
+          <label for="note-secret-input">Secret</label>
+          <input
+            type="text"
+            id="note-secret-input"
+            name="note-secret"
+            required
+          />
+        </div>
+        <button id="add-note-submit-button" type="submit">Add Note</button>
+      </form>
+    </div>
   </body>
 </html>
