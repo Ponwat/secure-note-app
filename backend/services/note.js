@@ -9,7 +9,6 @@ class Note {
      * @param {String} title 
      * @param {String} content 
      * @param {String | undefined} collectionId 
-     * @param {String} collectionName 
      */
     constructor(title, content, collectionId) {
         this.id = generateId();
@@ -39,24 +38,38 @@ class NoteCollection {
     }
 };
 
-const collection1 = new NoteCollection('notes');
-const collections = [collection1];
+/** @type {NoteCollection[]} */
+const collections = [];
+
+/**
+ * @param {NoteCollection} collection
+ */
+const addNoteCollection = (collection) => {
+    collections.push(collection);
+};
 
 /**
  * @param {String | undefined} id
  * @return {NoteCollection | undefined}
  */
 const findNoteCollection = (id) => {
-    for (const collection of collections) {
-        if (collection.id === id) {
-            return collection;
+    for (let index = 0; index < collections.length; index++) {
+        if (collections[index].id === id) {
+            return collections[index];
         }
     }
     return undefined;
 };
 
-const note1 = new Note('Buy a powerbank', 'Must support PD 65W or better');
-const notes = [note1];
+/** @type {Note[]} */
+const notes = [];
+
+/**
+ * @returns {Note[]}
+ */
+const getNotes = () => {
+    return notes;
+};
 
 /**
  * @param {Note} note
@@ -71,9 +84,9 @@ const addNote = (note) => {
  * @return {Note | undefined}
  */
 const findNote = (id) => {
-    for (const note of notes) {
-        if (note.id === id) {
-            return note;
+    for (let index = 0; index < notes.length; index++) {
+        if (notes[index].id === id) {
+            return notes[index];
         }
     }
     return undefined;
@@ -84,7 +97,7 @@ const findNote = (id) => {
  * @return {String | undefined}
  */
 const findNoteIndex = (id) => {
-    for (const index in notes) {
+    for (let index = 0; index < notes.length; index++) {
         if (notes[index].id === id) {
             return index;
         }
@@ -101,9 +114,11 @@ const deleteNoteAtIndex = (index) => {
 };
 
 module.exports = {
-    Note,
     NoteCollection,
+    addNoteCollection,
+    Note,
     findNoteCollection,
+    getNotes,
     addNote,
     findNote,
     findNoteIndex,
