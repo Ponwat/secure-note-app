@@ -1,0 +1,25 @@
+:root {
+  --background-default: #ffffff;
+  --background-brand: #2c2c2c;
+  --background-brand-hover: #1e1e1e;
+
+  --border-natural-default: #303030;
+  --border-brand: #2c2c2c;
+  --border-secondary: #757575;
+
+  --text-natural-default: #303030;
+  --text-natural-secondary: #5a5a5a;
+  --text-brand: #f5f5f5;
+
+  --icon-danger-default: #900b09;
+
+  --primary-color: #4a90e2;
+  --secondary-color: #f5f5f5;
+  --text-color: #333333;
+
+  --card-min-width: 200px;
+  --card-max-width: 400px;
+  --border-radius: 8px;
+
+  --font-bold: 700;
+}

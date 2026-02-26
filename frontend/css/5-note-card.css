@@ -1,0 +1,46 @@
+.note-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  padding: 0.75rem;
+
+  background-color: var(--background-default);
+
+  border: var(--border-brand) 1px solid;
+  border-radius: var(--border-radius);
+  min-width: var(--card-min-width);
+  max-width: var(--card-max-width);
+}
+
+.note-card > .note-card-title {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-card > .note-card-title > .note-card-title-label {
+  color: var(--text-natural-default);
+  font-size: 2rem;
+  font-weight: var(--font-bold);
+}
+
+.note-card > .note-card-title > .delete-note-button {
+  width: 2rem;
+  height: 2rem;
+
+  border: none;
+  cursor: pointer;
+
+  color: var(--icon-danger-default);
+  background-color: transparent;
+  fill: var(--icon-danger-default);
+}
+
+.note-card > .note-card-content {
+  color: var(--text-natural-secondary);
+  font-size: 1.5rem;
+  font-weight: var(--font-bold);
+}

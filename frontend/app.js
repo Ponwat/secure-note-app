@@ -1,3 +1,4 @@
+/** @type {HTMLDivElement} */
 const notesContainer = document.getElementById("notes-container");
 if (!notesContainer) {
   console.log("Notes container not found");
@@ -47,11 +48,14 @@ const createNote = () => {
   createNoteCard("New Note", "This is the content of the new note.");
 }
 
+/** @type {HTMLButtonElement} */
 const addNoteButton = document.getElementById("add-note-button");
 
 let isOpeningAddNoteForm = false;
 
+/** @type {HTMLDivElement} */
 const addNewNoteFormLayer = document.getElementById("add-new-note-form-layer");
+/** @type {HTMLFormElement} */
 const addNewNoteForm = document.getElementById("add-new-note-form");
 const openNoteForm = (noteForm) => {
   if (!isOpeningAddNoteForm) {

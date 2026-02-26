@@ -1,0 +1,33 @@
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1.5rem;
+
+  background-color: var(--background-default);
+
+  border-bottom: 1px solid var(--border-natural-default);
+}
+
+#header > #header-title {
+  color: var(--text-natural-default);
+  font-size: 4rem;
+}
+
+#header > #add-note-button {
+  padding: 1.5rem;
+
+  color: var(--text-brand);
+  font-weight: var(--font-bold);
+  font-size: 2rem;
+
+  background-color: var(--background-brand);
+  border: var(--border-brand) 1px solid;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+#header > #add-note-button:hover {
+  background-color: var(--background-brand-hover);
+}
