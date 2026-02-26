@@ -1,4 +1,7 @@
 const notesContainer = document.getElementById("notes-container");
+if (!notesContainer) {
+  console.log("Notes container not found");
+}
 
 /**
  * @param {String} noteTitle 
@@ -46,4 +49,44 @@ const createNote = () => {
 
 const addNoteButton = document.getElementById("add-note-button");
 
-addNoteButton.addEventListener("click", createNote);
+let isOpeningAddNoteForm = false;
+
+const addNewNoteFormLayer = document.getElementById("add-new-note-form-layer");
+const addNewNoteForm = document.getElementById("add-new-note-form");
+const openNoteForm = (noteForm) => {
+  if (!isOpeningAddNoteForm) {
+    noteForm.classList.remove("hidden");
+    isOpeningAddNoteForm = true;
+  }
+};
+
+const closeNoteForm = (noteForm) => {
+  if (isOpeningAddNoteForm) {
+    noteForm.classList.add("hidden");
+    isOpeningAddNoteForm = false;
+  }
+};
+
+const toggleNoteForm = (noteForm) => {
+  if (!isOpeningAddNoteForm) {
+    openNoteForm(noteForm);
+  } else {
+    closeNoteForm(noteForm);
+  }
+};
+
+addNoteButton.addEventListener("click", () => {
+  toggleNoteForm(addNewNoteFormLayer);
+});
+
+addNewNoteForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const noteTitleInput = document.getElementById("note-title-input");
+  const noteContentInput = document.getElementById("note-content-input");
+  const noteTitle = noteTitleInput.value;
+  const noteContent = noteContentInput.value;
+  createNoteCard(noteTitle, noteContent);
+  noteTitleInput.value = "";
+  noteContentInput.value = "";
+  closeNoteForm(addNewNoteFormLayer);
+});
