@@ -11,7 +11,9 @@ const { getNotes } = require('../services/note.js');
 const handleGetNotes = (_req, res) => {
     const notes = getNotes();
 
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, { 
+        'Content-Type': 'application/json',
+    });
     res.end(JSON.stringify(notes));
 };
 

@@ -37,11 +37,31 @@ addNote(note1);
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }} res
  */
+const handleOptions = (req, res) => {
+    res.writeHead(204, { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Methods': ['POST', 'GET', 'OPTIONS', 'DELETE'].join(', '),
+        'Access-Control-Allow-Headers': ['Content-Type', 'Authorization'].join(', '),
+    });
+    res.end();
+};
+
+
+/**
+ * @param {http.IncomingMessage} req
+ * @param {http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }} res
+ */
 const serverHandler = async (req, res) => {
     console.log(`Raw request URL: ${req.url}`);
     console.log(`Raw request method: ${req.method}`);
     console.log(`Raw request headers: `, req.headers);
 
+    res.appendHeader('Access-Control-Allow-Origin', '*');
+
+    if (req.method === 'OPTIONS') {
+        handleOptions(req, res);
+        return;
+    }
     if (req.url.startsWith('/api/notes') && req.method === 'GET') {
         handleGetNotes(req, res);
         return;

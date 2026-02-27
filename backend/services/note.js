@@ -24,7 +24,7 @@ class Note {
             this.collectionName = collection.name;
         }
 
-        this.user_id = 1;
+        this.userId = 1;
     }
 };
 

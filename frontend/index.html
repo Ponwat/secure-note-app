@@ -29,10 +29,10 @@
     <link rel="stylesheet" href="./css/1-global.css" />
     <link rel="stylesheet" href="./css/2-header.css" />
     <link rel="stylesheet" href="./css/3-body.css" />
-    <link rel="stylesheet" href="./css/4-add-new-note-form.css">
+    <link rel="stylesheet" href="./css/4-add-new-note-form.css" />
     <link rel="stylesheet" href="./css/5-note-card.css" />
 
-    <script src="app.js" defer></script>
+    <script src="app.js" type="module" defer></script>
   </head>
 
   <body>
@@ -53,6 +53,14 @@
     <!-- AddNewNoteForm -->
     <div id="add-new-note-form-layer" class="hidden">
       <div id="add-new-note-form">
+        <button id="close-add-new-note-form-button">
+          <svg viewBox="0 0 24 24" id="close-add-new-note-form-icon">
+            <path
+              fill="currentColor"
+              d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z"
+            />
+          </svg>
+        </button>
         <h2 id="add-new-note-title">Add New Note</h2>
         <form id="add-new-note-form-element">
           <div class="input-group">

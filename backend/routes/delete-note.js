@@ -10,7 +10,7 @@ const { checkAuthorized } = require('../services/authorization.js');
  * @param {http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }} res
  */
 const handleDeleteNote = (req, res) => {
-    const isAuthorized = checkAuthorized(req);
+    const isAuthorized = checkAuthorized(req.headers);
     if (!isAuthorized) {
         res.writeHead(401, { 'WWW-Authenticate': 'Bearer' });
         res.end();
