@@ -36,8 +36,11 @@ const addNewNoteFormLayer = document.getElementById("add-new-note-form-layer");
 /** @type {HTMLFormElement} */
 const addNewNoteForm = document.getElementById("add-new-note-form-element");
 
+// /** @type {String} */
+// const apiUrl = "http://localhost:6969/api";
+
 /** @type {String} */
-const apiUrl = "http://localhost:6969/api";
+const apiUrl = "https://secure-note-app-x7us.onrender.com/api";
 
 addNoteButton.addEventListener("click", async () => {
   openNoteForm(addNewNoteFormLayer);
