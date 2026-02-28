@@ -13,7 +13,7 @@ const { handleGetNotes } = require('./routes/get-notes.js');
 const { handleCreateNote } = require('./routes/create-note.js');
 const { handleDeleteNote } = require('./routes/delete-note.js');
 
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';
 
 dotenv.config();
 
