@@ -1,24 +1,103 @@
 #body {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: start;
-  gap: 1rem;
+  gap: var(--space-3);
 
-  padding: 1.5rem;
+  padding: var(--space-3);
   height: 100%;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
 }
 
-#body > #body-header-title {
+#body > #body-header-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+#body > #body-header-row > #body-header-title {
   color: var(--text-natural-default);
-  font-size: 2.5rem;
+  font-size: var(--font-size-section-title);
+  font-weight: var(--font-bold);
+}
+
+#body > #body-header-row > #notes-search-input {
+  width: 100%;
+  min-height: 2.5rem;
+  margin-left: 0;
+  padding: 0.875rem 0.75rem;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--border-radius);
+  color: var(--text-natural-default);
+}
+
+#body > #startup-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 3rem;
+  color: var(--text-natural-secondary);
+}
+
+#body > #startup-loading.hidden {
+  display: none;
+}
+
+#body > #startup-loading > #startup-loading-spinner {
+  display: flex;
+  align-items: center;
+}
+
+#body > #startup-loading > #startup-loading-text {
   font-weight: var(--font-bold);
 }
 
 #body > #notes-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: var(--space-2);
   width: 100%;
+}
+
+@media (min-width: 600px) {
+  #body > #notes-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  #body > #body-header-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #body > #body-header-row > #notes-search-input {
+    width: min(22rem, 100%);
+    margin-left: auto;
+  }
+
+  #body > #startup-loading {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 1024px) {
+  #body {
+    padding: var(--space-5) var(--space-6);
+  }
+
+  #body > #notes-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
 }

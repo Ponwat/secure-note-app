@@ -1,9 +1,27 @@
 const { env } = require('../config/env.js');
+const { UpstreamError } = require('../helpers/upstream-error.js');
+
+/**
+ * @param {string} action
+ * @param {number} status
+ * @param {string} statusText
+ */
+const createStatusError = (action, status, statusText) => {
+    const isUnavailable = status >= 500;
+    const mappedStatus = isUnavailable ? 503 : 502;
+    return new UpstreamError(`PocketHost ${action} failed: ${status} ${statusText}`, mappedStatus);
+};
+
+/**
+ * @param {string} action
+ */
+const createNetworkError = (action) => {
+    return new UpstreamError(`PocketHost ${action} failed: network error`, 503);
+};
 
 const pocketHost = {
     /** @type {() => Promise<Array<Object>>} */
     list: async () => {
-        // TODO: Inplement this
         const apiUrl = `${env.POCKET_HOST_URL}?perPage=500`;
 
         /** @type {RequestInit} */
@@ -17,19 +35,21 @@ const pocketHost = {
         try {
             const response = await fetch(apiUrl, options);
             if (!response.ok) {
-                throw new Error(`Cannot fetch from PocketHost response was ${response.status} ${response.statusText}`)
+                throw createStatusError('list', response.status, response.statusText);
             }
-            /** @type {{ page: Number, perPage: Number, totalItems: Number, totalPages: Number, items: Array<Object> }} */
-            const notes = await response.json();
 
-            return notes.items;
-        } catch(error) {
-            return [];
+            /** @type {{ items: Array<Object> }} */
+            const notes = await response.json();
+            return Array.isArray(notes.items) ? notes.items : [];
+        } catch (error) {
+            if (error instanceof UpstreamError) {
+                throw error;
+            }
+            throw createNetworkError('list');
         }
     },
     /** @type {(token: String, data: Object) => Promise<Object>} */
     create: async (token, data) => {
-        // TODO: Inplement this
         const apiUrl = env.POCKET_HOST_URL;
 
         /** @type {RequestInit} */
@@ -45,19 +65,19 @@ const pocketHost = {
         try {
             const response = await fetch(apiUrl, options);
             if (!response.ok) {
-                throw new Error(`Cannot fetch from PocketHost response was ${response.status} ${response.statusText}`)
+                throw createStatusError('create', response.status, response.statusText);
             }
-            const note = await response.json();
-            console.log(note);
-            return note;
-        } catch(error) {
-            console.error(error);
-            return {};
+
+            return await response.json();
+        } catch (error) {
+            if (error instanceof UpstreamError) {
+                throw error;
+            }
+            throw createNetworkError('create');
         }
     },
     /** @type {(id: String) => Promise<Object>} */
     view: async (id) => {
-        // TODO: Inplement this
         const apiUrl = `${env.POCKET_HOST_URL}/${id}`;
 
         /** @type {RequestInit} */
@@ -71,18 +91,19 @@ const pocketHost = {
         try {
             const response = await fetch(apiUrl, options);
             if (!response.ok) {
-                throw new Error(`Cannot fetch from PocketHost response was ${response.status} ${response.statusText}`)
+                throw createStatusError('view', response.status, response.statusText);
             }
-            const note = await response.json();
-            return note;
-        } catch(error) {
-            console.error(error);
-            return {};
+
+            return await response.json();
+        } catch (error) {
+            if (error instanceof UpstreamError) {
+                throw error;
+            }
+            throw createNetworkError('view');
         }
     },
     /** @type {(token: String, id: String , data: Object) => Promise<Object>} */
     update: async (token, id, data) => {
-        // TODO: Inplement this
         const apiUrl = `${env.POCKET_HOST_URL}/${id}`;
 
         /** @type {RequestInit} */
@@ -98,18 +119,19 @@ const pocketHost = {
         try {
             const response = await fetch(apiUrl, options);
             if (!response.ok) {
-                throw new Error(`Cannot fetch from PocketHost response was ${response.status} ${response.statusText}`)
+                throw createStatusError('update', response.status, response.statusText);
             }
-            const note = await response.json();
-            return note;
-        } catch(error) {
-            console.error(error);
-            return {};
+
+            return await response.json();
+        } catch (error) {
+            if (error instanceof UpstreamError) {
+                throw error;
+            }
+            throw createNetworkError('update');
         }
     },
     /** @type {(token: String, id: String) => Promise<Response>} */
     delete: async (token, id) => {
-        // TODO: Inplement this
         const apiUrl = `${env.POCKET_HOST_URL}/${id}`;
 
         /** @type {RequestInit} */
@@ -124,12 +146,15 @@ const pocketHost = {
         try {
             const response = await fetch(apiUrl, options);
             if (!response.ok) {
-                throw new Error(`Cannot fetch from PocketHost response was ${response.status} ${response.statusText}`)
+                throw createStatusError('delete', response.status, response.statusText);
             }
+
             return response;
-        } catch(error) {
-            console.error(error);
-            return {};
+        } catch (error) {
+            if (error instanceof UpstreamError) {
+                throw error;
+            }
+            throw createNetworkError('delete');
         }
     }
 }

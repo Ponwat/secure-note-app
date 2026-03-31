@@ -1,28 +1,30 @@
 # Report
 1. JS Engine vs. Runtime
-    - The frontend uses V8 Engine and Browser Runtime Environment
-    - The backend uses V8 Engine and Node.js Runtime Environment
+    - The frontend runs on the V8 JavaScript engine inside the browser runtime environment.
+    - The backend runs on the V8 JavaScript engine inside the Node.js runtime environment.
+
 2. DOM
-    - The frontend manipulate DOM by getElementById(#id) to select element to manipulate.
-    - Add note by use appendChild(Note) on #notes-container element.
-    - Do popup for create note form by add and remove class '.hidden' on #add-new-note-form-layer element.
+    - The frontend manipulates the DOM using `document.getElementById("...")` to select elements.
+    - A note card is added to the page using `appendChild(...)` on the `#notes-container` element.
+    - The create or edit note form popup is shown or hidden by removing or adding the `hidden` class on `#note-form-layer`.
+
 3. HTTP/HTTPS
-    - When you click "Submit".
-        1. The website send POST request to the server with
-            - Authorization header with value of "Bearer {TOKEN}"
-            - Content-Type header with value of "application/json"
-            - Body that is JSON object with "title" and "content" field
-        2. Then the server will response with
-            - 401 Unauthorized if the TOKEN was not correct
-            - 400 Bad Request if the body does not have title or content field
-            - 201 Created with the Note object if the request is correct
-        3. Then the website create new Note card if the response is Created
-        4. Then put it and display inside noteContainer.
-    - The HTTPS is important for encrypt data in transit when the request is sending to the server or the server responding to the website
-    - If HTTPS was not use. The data will be the plain text and anyone can read the sensitive data like Authorization Header
-    - Uses HTTPS will encrypt the data so anyone can not read the sensitive data like Authorization Header
+    - When the user submits the note form:
+        1. The frontend sends a `POST` request to `/api/notes` with:
+            - `Authorization: Bearer {TOKEN}`
+            - `Content-Type: application/json`
+            - A JSON body containing `title` and `content`
+        2. The backend can return:
+            - `401 Unauthorized` if the token is invalid
+            - `415 Unsupported Media Type` if `Content-Type` is not `application/json`
+            - `400 Bad Request` if JSON is invalid or note fields fail validation
+            - `201 Created` with the created note object if the request is valid
+        3. The frontend creates and displays a new note card when creation succeeds.
+    - HTTPS is important because it encrypts data in transit (request and response), including sensitive headers like `Authorization`.
+    - In local development, this project currently uses HTTP localhost; in deployment, HTTPS should be used to protect credentials and note content.
+
 4. Environment Variable
-    - We store the SECRET_TOKEN in the backend .env file because we want only authorized user to access the data
-    - If we put it in the frontend everyone will be able to access the data
+    - `SECRET_TOKEN` is stored in the backend environment (`.env`) so only the server can verify authorization.
+    - Putting `SECRET_TOKEN` in the frontend would expose it to users and break security.
 
 

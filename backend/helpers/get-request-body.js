@@ -11,6 +11,7 @@
 const getRequestBody = (req) => {
     return new Promise((resolve, reject) => {
         let body = '';
+        let didReject = false;
 
         /** 
          * @param {String} chunk 
@@ -19,18 +20,29 @@ const getRequestBody = (req) => {
             body += chunk;
 
             if (body.length > 1_000_000) {
+                didReject = true;
                 req.destroy();
-                reject(new Error('Payload too large'));
+                const error = new Error('Payload too large');
+                error.statusCode = 413;
+                reject(error);
             }
         };
         req.on('data', onData);
 
         const onEnd = () => {
+            if (didReject) {
+                return;
+            }
             resolve(body);
         };
         req.on('end', onEnd);
 
-        req.on('error', () => resolve(''));
+        req.on('error', (error) => {
+            if (didReject) {
+                return;
+            }
+            reject(error);
+        });
     });
 };
 

@@ -1,10 +1,5 @@
-import { deleteNote } from "./api.js";
+import { deleteNoteIcon, editNoteIcon } from "./svgs.js";
 
-/**
- * @param {String} noteTitle
- * @param {String} noteContent
- * @return {HTMLDivElement}
- */
 /**
  * @param {String} noteTitle
  * @param {String} noteContent
@@ -31,19 +26,11 @@ const createNoteCard = (noteTitle, noteContent, noteId) => {
 
   const editNoteButtonElement = document.createElement("button");
   editNoteButtonElement.classList.add("edit-note-button");
-  editNoteButtonElement.innerHTML = ` 
-    <svg viewBox="0 0 24 24" class="edit-note-icon"> 
-        <path fill="currentColor" d="M3 21v-4.25L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.438.65T21 6.4q0 .4-.137.763t-.438.662L7.25 21zM17.6 7.8L19 6.4L17.6 5l-1.4 1.4z"/>
-    </svg> 
-  `;
+  editNoteButtonElement.innerHTML = editNoteIcon;
 
   const deleteNoteButtonElement = document.createElement("button");
   deleteNoteButtonElement.classList.add("delete-note-button");
-  deleteNoteButtonElement.innerHTML = ` 
-    <svg viewBox="0 0 24 24" class="delete-note-icon"> 
-    <path fill="currentColor" d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z" /> 
-    </svg> 
-  `;
+  deleteNoteButtonElement.innerHTML = deleteNoteIcon;
 
   actionButtonsElement.appendChild(editNoteButtonElement);
   actionButtonsElement.appendChild(deleteNoteButtonElement);
@@ -62,33 +49,18 @@ const createNoteCard = (noteTitle, noteContent, noteId) => {
 };
 
 /**
- * @param {String} noteId
- * @return {void}
- */
-const removeNoteCard = (noteId) => {
-  const noteCards = document.getElementsByClassName("note-card");
-  for (const noteCard of noteCards) {
-    if (noteCard.dataset && noteCard.dataset.id === String(noteId)) {
-      noteCard.remove();
-      break;
-    }
-  }
-};
-
-/**
- * @param {String} noteCard
- * @param {String} token
+ * @param {HTMLDivElement} noteCard
  * @param {String} id
+ * @param {Function} [onDeleteIntent]
  * @return {void}
  */
-const setupDeleteNoteButton = (noteCard, apiUrl, token, id) => {
+const setupDeleteNoteButton = (noteCard, id, onDeleteIntent) => {
   const deleteNoteButton = noteCard.getElementsByClassName("delete-note-button")[0];
-  deleteNoteButton.addEventListener("click", async () => {
-    const success = await deleteNote(apiUrl, id, token);
-    if (success) {
-      noteCard.remove();
+  deleteNoteButton.addEventListener("click", () => {
+    if (typeof onDeleteIntent === "function") {
+      onDeleteIntent(id);
     }
   });
 };
 
-export { createNoteCard, removeNoteCard, setupDeleteNoteButton };
+export { createNoteCard, setupDeleteNoteButton };

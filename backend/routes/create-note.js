@@ -10,18 +10,9 @@ const { checkAuthorized } = require('../services/authorization.js');
 const { getRequestBody } = require('../helpers/get-request-body.js');
 const { pocketHost } = require("../config/pocket-host.js");
 const { env } = require("../config/env.js");
-
-/**
- * @param {String} body
- * @returns {{ title: String | undefined, content: String | undefined } | undefined}
- */
-const parseCreateNoteBody = (body) => {
-    try {
-        return JSON.parse(body);
-    } catch {
-        return undefined;
-    }
-};
+const { hasJsonContentType, validateNotePayload } = require('../helpers/request-utils.js');
+const { sendJson } = require('../helpers/http-response.js');
+const { UpstreamError } = require('../helpers/upstream-error.js');
 
 /**
  * @param {IncomingMessage} req
@@ -35,38 +26,67 @@ const handleCreateNote = async (req, res) => {
         return;
     }
 
-    const hasJSONContentType = req.headers['content-type'] === 'application/json';
+    const hasJSONContentType = hasJsonContentType(req.headers['content-type']);
     if (!hasJSONContentType) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
+        sendJson(res, 415, {
             'error': 'Bad request',
-            'message': 'Content-Type is not application/json',
-        }));
+            'message': 'Content-Type must be application/json',
+        });
         return;
     }
 
-    const body = await getRequestBody(req);
+    try {
+        const body = await getRequestBody(req);
+        const note = JSON.parse(body);
+        const validation = validateNotePayload(note);
+        if (!validation.ok) {
+            sendJson(res, 400, {
+                'error': 'Bad request',
+                'message': validation.message,
+            });
+            return;
+        }
 
-    const note = parseCreateNoteBody(body);
+        const createdNoteObject = await pocketHost.create(env.POCKET_HOST_TOKEN, {
+            ...validation.value,
+            user_id: env.USER_ID,
+        });
 
-    const properlyParsed = note.title !== undefined && note.content !== undefined;
-    if (!properlyParsed) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
-            'error': 'Bad request',
-            'message': 'Request body could not be read properly',
-        }));
+        const newNote = Note.fromObject(createdNoteObject);
+        addNote(newNote);
+
+        sendJson(res, 201, { 'message': 'New note created', 'note': newNote });
+    } catch (error) {
+        if (error instanceof SyntaxError) {
+            sendJson(res, 400, {
+                'error': 'Bad request',
+                'message': 'Request body must be valid JSON',
+            });
+            return;
+        }
+
+        if (error && error.statusCode === 413) {
+            sendJson(res, 413, {
+                'error': 'Payload too large',
+                'message': 'Request payload exceeds 1MB limit',
+            });
+            return;
+        }
+
+        if (error instanceof UpstreamError) {
+            sendJson(res, error.statusCode, {
+                'error': 'Upstream error',
+                'message': error.message,
+            });
+            return;
+        }
+
+        sendJson(res, 500, {
+            'error': 'Internal server error',
+            'message': 'Unexpected error while creating note',
+        });
         return;
     }
-
-    const createdNoteObject = await pocketHost.create(env.POCKET_HOST_TOKEN, {...note, user_id: env.USER_ID});
-
-    const newNote = Note.fromObject(createdNoteObject);
-    console.log(newNote);
-    addNote(newNote);
-
-    res.writeHead(201, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ 'message': 'New note created', 'note': newNote }));
 };
 
 module.exports = {

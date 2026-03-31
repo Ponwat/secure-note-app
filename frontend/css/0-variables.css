@@ -23,4 +23,34 @@
   --border-radius: 8px;
 
   --font-bold: 700;
+
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.25rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  --content-max-width: 1200px;
+
+  --font-size-body: 1rem;
+  --font-size-section-title: 1.75rem;
+  --font-size-header-title: 2rem;
+  --font-size-card-title: 1.25rem;
+  --font-size-card-content: 1rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --font-size-section-title: 2.125rem;
+    --font-size-header-title: 2.75rem;
+    --font-size-card-title: 1.5rem;
+    --font-size-card-content: 1.125rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --font-size-header-title: 3.25rem;
+  }
 }

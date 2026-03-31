@@ -10,7 +10,7 @@ const env = {
     /** @type {String} */
     POCKET_HOST_TOKEN: process.env.POCKET_HOST_TOKEN,
     /** @type {Number} */
-    USER_ID: 66010449,
+    USER_ID: Number(process.env.USER_ID),
 };
 
 /**
@@ -18,12 +18,28 @@ const env = {
  */
 const validateEnv = () => {
     let isValid = true;
-    for (const vairable in env) {
-        if (env[vairable] === undefined) {
-            console.error(`${vairable} is not defined in .env`);
+    const requiredVariables = [
+        'PORT',
+        'SECRET_TOKEN',
+        'FRONTEND_ORIGIN',
+        'POCKET_HOST_URL',
+        'POCKET_HOST_TOKEN',
+        'USER_ID',
+    ];
+
+    for (const variable of requiredVariables) {
+        const value = env[variable];
+        if (value === undefined || String(value).trim() === '') {
+            console.error(`${variable} is missing or empty in environment variables`);
             isValid = false;
         }
     }
+
+    if (!Number.isFinite(env.USER_ID)) {
+        console.error('USER_ID must be a numeric value');
+        isValid = false;
+    }
+
     return isValid;
 };
 

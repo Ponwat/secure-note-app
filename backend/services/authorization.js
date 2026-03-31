@@ -21,7 +21,6 @@ const configSecret = (token) => {
  * @returns {boolean}
  */
 const checkAuthorized = (headers) => {
-    console.log(headers.authorization);
     if (!headers.authorization) {
         return false;
     }

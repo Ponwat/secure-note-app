@@ -33,8 +33,10 @@
     <link rel="stylesheet" href="./css/4-note-form.css" />
     <link rel="stylesheet" href="./css/5-note-card.css" />
     <link rel="stylesheet" href="./css/6-note-card-skeleton.css" />
+    <link rel="stylesheet" href="./css/7-loading-icon.css" />
     <!-- #endregion /Stylesheets -->
 
+    <script src="./config.js"></script>
     <script src="./scripts/app.js" type="module" defer></script>
   </head>
 
@@ -48,7 +50,20 @@
 
     <!-- #region Body -->
     <section id="body">
-      <h2 id="body-header-title">Notes</h2>
+      <div id="body-header-row">
+        <h2 id="body-header-title">Notes</h2>
+        <input
+          type="search"
+          id="notes-search-input"
+          name="notes-search"
+          placeholder="Search notes"
+          aria-label="Search notes"
+        />
+      </div>
+      <div id="startup-loading">
+        <span id="startup-loading-spinner"></span>
+        <p id="startup-loading-text">Loading notes...</p>
+      </div>
       <div id="notes-container"></div>
     </section>
     <!-- #endregion /Body -->
@@ -65,6 +80,7 @@
           </svg>
         </button>
         <h2 id="note-title">Add New Note</h2>
+        <p id="note-form-error" role="alert" aria-live="polite"></p>
         <form id="note-form-element">
           <div class="input-group">
             <label for="note-id-input">ID</label>
