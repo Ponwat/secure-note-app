@@ -1,4 +1,4 @@
-# Secure Note App
+# 66010449 Secure Note App
 
 A simple secure note application with:
 - Backend: Node.js HTTP API
@@ -95,3 +95,36 @@ You should have two running processes:
 Backend (`backend/package.json`):
 
 - `npm run dev` - start server (`node server.js`)
+
+## Deployment
+
+### Live Instance
+
+This project is deployed on **Vercel** (frontend) and **Render** (backend):
+
+- **Frontend URL**: https://66010449-secure-note-app.vercel.app/
+- **Backend API**: https://secure-note-app-x7us.onrender.com/api
+- API URL is automatically detected via `config.js` based on hostname
+
+### Authentication
+
+The deployed app requires authentication with the following secret token:
+
+```
+SUPER_SECRET_TOKEN
+```
+
+When using the deployed app:
+
+1. Navigate to https://66010449-secure-note-app.vercel.app/
+2. Click **Add New Note**
+3. Enter **Title** and **Content**
+4. In the **Secret** field, enter: `SUPER_SECRET_TOKEN`
+5. Submit to create a note
+
+### Backend Configuration
+
+The backend is deployed on Render with:
+- Endpoint: https://secure-note-app-x7us.onrender.com/api
+- Environment variables configured for production HTTPS and PocketHost integration
+- The frontend automatically routes API requests to the production backend
