@@ -6,27 +6,88 @@ const generateId = () => {
 
 class Note {
     /**
-     * @param {String} title 
-     * @param {String} content 
-     * @param {String | undefined} collectionId 
+     * @param {string} title
+     * @param {string} content
+     * @param {string} [collectionId]
      */
     constructor(title, content, collectionId) {
+        /** @type {string} */
         this.id = generateId();
+
+        /** @type {string} */
         this.title = title;
+
+        /** @type {string} */
         this.content = content;
 
-        this.created = new Date();
+        /** @type {String} */
+        this.created = new Date().toString();
+
+        /** @type {String} */
         this.updated = this.created;
 
+        /** @type {string | undefined} */
         this.collectionId = collectionId;
+
+        /** @type {string | undefined} */
+        this.collectionName = undefined;
+
         const collection = findNoteCollection(this.collectionId);
         if (collection !== undefined) {
             this.collectionName = collection.name;
         }
 
+        /** @type {number} */
         this.userId = 1;
     }
-};
+
+    /**
+     * @param {Object} obj
+     * @param {string} obj.title
+     * @param {string} obj.content
+     * @param {string} obj.collectionId
+     * @param {string} obj.collectionName
+     * @param {string} obj.id
+     * @param {string | Date} obj.created
+     * @param {string | Date} obj.updated
+     * @param {string | number} obj.user_id
+     *
+     * @returns {Note}
+     */
+    static fromObject = ({
+        title,
+        content,
+        collectionId,
+        collectionName,
+        id,
+        created,
+        updated,
+        user_id
+    }) => {
+        const collection = findNoteCollection(collectionId);
+        if (collection === undefined) {
+            const collection = new NoteCollection(collectionName);
+            collection.id = collectionName;
+            addNoteCollection(collection);
+        }
+
+        const note = new Note(title, content, collectionId);
+
+        /** @type {string} */
+        note.id = id;
+
+        /** @type {Date | string} */
+        note.created = created;
+
+        /** @type {Date | string} */
+        note.updated = updated;
+
+        /** @type {number | string} */
+        note.userId = user_id;
+
+        return note;
+    };
+}
 
 class NoteCollection {
     /**
@@ -80,6 +141,18 @@ const addNote = (note) => {
 }
 
 /**
+ * @param {Number} index
+ * @param {{title: String, content: String, updated: String}}
+ * @return {Note}
+ */
+const editNoteAtIndex = (index, {title, content, updated}) => {
+    notes[index].title = title;
+    notes[index].content = content;
+    notes[index].updated = updated;
+    return notes[index];
+};
+
+/**
  * @param {String | undefined} id
  * @return {Note | undefined}
  */
@@ -110,8 +183,16 @@ const findNoteIndex = (id) => {
  * @returns {Note}
  */
 const deleteNoteAtIndex = (index) => {
-    return notes.splice(index, 1)[0];
+    const note = notes.splice(index, 1)[0];
+    return note;
 };
+
+/**
+ * @returns {Note[]}
+ */
+const clearNote = () => {
+    return notes.splice(0, notes.length);
+}
 
 module.exports = {
     NoteCollection,
@@ -123,4 +204,6 @@ module.exports = {
     findNote,
     findNoteIndex,
     deleteNoteAtIndex,
-}
+    clearNote,
+    editNoteAtIndex,
+};

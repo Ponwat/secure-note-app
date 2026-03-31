@@ -1,6 +1,8 @@
 'use strict';
 
-const http = require('http');
+/**
+ * @import { IncomingHttpHeaders } from "http"
+ */
 
 /** @type {{ secretToken: String | undefined }} */
 const authorization = {
@@ -15,7 +17,7 @@ const configSecret = (token) => {
 };
 
 /**
- * @param {http.IncomingHttpHeaders} headers
+ * @param {IncomingHttpHeaders} headers
  * @returns {boolean}
  */
 const checkAuthorized = (headers) => {

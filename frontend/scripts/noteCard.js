@@ -26,6 +26,17 @@ const createNoteCard = (noteTitle, noteContent, noteId) => {
   noteCardTitleLabelElement.classList.add("note-card-title-label");
   noteCardTitleLabelElement.textContent = noteTitle || "New Note";
 
+  const actionButtonsElement = document.createElement("div");
+  actionButtonsElement.classList.add("note-card-action-buttons");
+
+  const editNoteButtonElement = document.createElement("button");
+  editNoteButtonElement.classList.add("edit-note-button");
+  editNoteButtonElement.innerHTML = ` 
+    <svg viewBox="0 0 24 24" class="edit-note-icon"> 
+        <path fill="currentColor" d="M3 21v-4.25L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.438.65T21 6.4q0 .4-.137.763t-.438.662L7.25 21zM17.6 7.8L19 6.4L17.6 5l-1.4 1.4z"/>
+    </svg> 
+  `;
+
   const deleteNoteButtonElement = document.createElement("button");
   deleteNoteButtonElement.classList.add("delete-note-button");
   deleteNoteButtonElement.innerHTML = ` 
@@ -34,8 +45,11 @@ const createNoteCard = (noteTitle, noteContent, noteId) => {
     </svg> 
   `;
 
+  actionButtonsElement.appendChild(editNoteButtonElement);
+  actionButtonsElement.appendChild(deleteNoteButtonElement);
+
   noteCardTitleElement.appendChild(noteCardTitleLabelElement);
-  noteCardTitleElement.appendChild(deleteNoteButtonElement);
+  noteCardTitleElement.appendChild(actionButtonsElement);
   noteCard.appendChild(noteCardTitleElement);
 
   const noteContentElement = document.createElement("p");
@@ -68,8 +82,7 @@ const removeNoteCard = (noteId) => {
  * @return {void}
  */
 const setupDeleteNoteButton = (noteCard, apiUrl, token, id) => {
-  const deleteNoteButton =
-    noteCard.getElementsByClassName("delete-note-button")[0];
+  const deleteNoteButton = noteCard.getElementsByClassName("delete-note-button")[0];
   deleteNoteButton.addEventListener("click", async () => {
     const success = await deleteNote(apiUrl, id, token);
     if (success) {

@@ -46,6 +46,26 @@ export const postNote = async (apiUrl, noteTitle, noteContent, token) => {
 /**
  * @param {String} apiUrl
  * @param {String} noteId
+ * @param {String} noteTitle
+ * @param {String} noteContent
+ * @param {String} token
+ * @returns {Object | null}
+ */
+export const editNote = async (apiUrl, noteId, noteTitle, noteContent, token) => {
+    const response = await fetchJSON(`${apiUrl}/notes/${noteId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title: noteTitle, content: noteContent }),
+    });
+    return response.note;
+};
+
+/**
+ * @param {String} apiUrl
+ * @param {String} noteId
  * @param {String} token
  * @returns {Boolean}
  */

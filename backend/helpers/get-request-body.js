@@ -1,9 +1,12 @@
 'use strict';
 
-const http = require('http');
+/**
+ * import { IncomingMessage } from 'http';
+ */
 
 /**
- * @param {http.IncomingMessage} req
+ * @param {IncomingMessage} req
+ * @return {Promise<string>}
  */
 const getRequestBody = (req) => {
     return new Promise((resolve, reject) => {

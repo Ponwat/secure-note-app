@@ -1,14 +1,19 @@
 'use strict';
 
-const http = require('http');
+/**
+ * @import { IncomingMessage, ServerResponse } from "http";
+ */
 
 const { getNotes } = require('../services/note.js');
+const { syncPocketHostNotes } = require("../services/sync-pocket-host-notes.js");
 
 /**
- * @param {http.IncomingMessage} _req
- * @param {http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }} res
+ * @param {IncomingMessage} _req
+ * @param {ServerResponse<IncomingMessage> & { req: IncomingMessage }} res
  */
-const handleGetNotes = (_req, res) => {
+const handleGetNotes = async (_req, res) => {
+    await syncPocketHostNotes();
+
     const notes = getNotes();
 
     res.writeHead(200, { 

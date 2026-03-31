@@ -1,15 +1,19 @@
 'use strict';
 
-const http = require('http');
+/**
+ * @import { IncomingMessage, ServerResponse } from "http"
+ */
 
 const { findNoteIndex, deleteNoteAtIndex } = require('../services/note.js');
 const { checkAuthorized } = require('../services/authorization.js');
+const { pocketHost } = require("../config/pocket-host.js");
+const { env } = require("../config/env.js");
 
 /**
- * @param {http.IncomingMessage} req
- * @param {http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }} res
+ * @param {IncomingMessage} req
+ * @param {ServerResponse<IncomingMessage> & { req: IncomingMessage }} res
  */
-const handleDeleteNote = (req, res) => {
+const handleDeleteNote = async (req, res) => {
     const isAuthorized = checkAuthorized(req.headers);
     if (!isAuthorized) {
         res.writeHead(401, { 'WWW-Authenticate': 'Bearer' });
@@ -27,7 +31,8 @@ const handleDeleteNote = (req, res) => {
         return;
     }
 
-    deleteNoteAtIndex(index);
+    const deletedNote = deleteNoteAtIndex(index);
+    await pocketHost.delete(env.POCKET_HOST_TOKEN, deletedNote.id);
 
     res.writeHead(204);
     res.end();

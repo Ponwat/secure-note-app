@@ -4,18 +4,19 @@
  * @import { IncomingMessage, ServerResponse } from "http"
  */
 
-const { Note, addNote } = require('../services/note.js');
+const { Note, addNote, findNoteIndex, editNoteAtIndex } = require('../services/note.js');
 const { checkAuthorized } = require('../services/authorization.js');
 
 const { getRequestBody } = require('../helpers/get-request-body.js');
 const { pocketHost } = require("../config/pocket-host.js");
 const { env } = require("../config/env.js");
+const { editNote } = require("../../frontend/scripts/api.js");
 
 /**
  * @param {String} body
  * @returns {{ title: String | undefined, content: String | undefined } | undefined}
  */
-const parseCreateNoteBody = (body) => {
+const parseEditNoteBody = (body) => {
     try {
         return JSON.parse(body);
     } catch {
@@ -27,11 +28,21 @@ const parseCreateNoteBody = (body) => {
  * @param {IncomingMessage} req
  * @param {ServerResponse<IncomingMessage> & { req: IncomingMessage }} res
  */
-const handleCreateNote = async (req, res) => {
+const handleEditNote = async (req, res) => {
     const isAuthorized = checkAuthorized(req.headers);
     if (!isAuthorized) {
         res.writeHead(401, { 'WWW-Authenticate': 'Bearer' });
         res.end();
+        return;
+    }
+
+    const [_url, id] = req.url.match('^/api/notes/(\\w+)$');
+    const index = findNoteIndex(id);
+
+    const foundResource = index !== undefined;
+    if (!foundResource) {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Not Found');
         return;
     }
 
@@ -47,7 +58,7 @@ const handleCreateNote = async (req, res) => {
 
     const body = await getRequestBody(req);
 
-    const note = parseCreateNoteBody(body);
+    const note = parseEditNoteBody(body);
 
     const properlyParsed = note.title !== undefined && note.content !== undefined;
     if (!properlyParsed) {
@@ -59,16 +70,14 @@ const handleCreateNote = async (req, res) => {
         return;
     }
 
-    const createdNoteObject = await pocketHost.create(env.POCKET_HOST_TOKEN, {...note, user_id: env.USER_ID});
+    const updatedNoteObject = await pocketHost.update(env.POCKET_HOST_TOKEN, id, {...note, user_id: 66010449});
 
-    const newNote = Note.fromObject(createdNoteObject);
-    console.log(newNote);
-    addNote(newNote);
+    const editedNote = editNoteAtIndex(index, updatedNoteObject);
 
-    res.writeHead(201, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ 'message': 'New note created', 'note': newNote }));
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 'message': 'Edited note', 'note': editedNote }));
 };
 
 module.exports = {
-    handleCreateNote
+    handleEditNote
 };
